@@ -51,7 +51,6 @@ namespace TankerFramework
             return result;
         }
 
-        public override bool InheritInteractionsFrom(Gizmo other) 
-            => other is Command_ToggleRightClick command && command.isActive(-1) == isActive(-1);
+        public override bool InheritInteractionsFrom(Gizmo other) => false;
     }
 }

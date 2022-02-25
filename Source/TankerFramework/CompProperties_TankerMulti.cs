@@ -20,7 +20,7 @@ namespace TankerFramework
             else if (tankTypes.Count == 1 && tankTypes[0] == TankType.All)
             {
                 tankTypes.Clear();
-                tankTypes.AddRange(Enumerable.Range(1, (int) (TankType.All - 3)).Select(x => (TankType)x));
+                tankTypes.AddRange(Enumerable.Range(1, (int) (TankType.All - 2)).Select(x => (TankType)x));
             }
             else
             {
