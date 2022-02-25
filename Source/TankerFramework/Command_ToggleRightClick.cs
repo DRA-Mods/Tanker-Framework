@@ -25,10 +25,7 @@ namespace TankerFramework
         public override void ProcessInput(Event ev)
         {
             if (!openOnLeftClick)
-            {
-                base.ProcessInput(ev);
                 toggleAction();
-            }
             else
             {
                 OpenMenu();
