@@ -20,7 +20,7 @@ namespace TankerFramework
 
         public override void ProcessInput(Event ev)
         {
-            if (!openOnLeftClick)
+            if (!openOnLeftClick || rightClickFloatMenuOptions.Count <= 1)
                 base.ProcessInput(ev);
             else
             {

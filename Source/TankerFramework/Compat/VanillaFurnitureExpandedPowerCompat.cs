@@ -67,7 +67,8 @@ namespace TankerFramework.Compat
                 if (num > 0)
                 {
                     storedAmount -= num;
-                    storeGasMethod(gasNetGetter(compPipe), storedAmount);
+                    storeGasMethod(gasNetGetter(compPipe), (float)num);
+                    tanker.SetStoredAmount(type, storedAmount);
                 }
             }
             else if (tanker.IsFilling(type) == true)

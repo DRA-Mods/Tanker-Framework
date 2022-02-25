@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TankerFramework.Compat;
 using Verse;
 
 namespace TankerFramework
@@ -20,10 +21,12 @@ namespace TankerFramework
             else if (tankTypes.Count == 1 && tankTypes[0] == TankType.All)
             {
                 tankTypes.Clear();
-                tankTypes.AddRange(Enumerable.Range(1, (int) (TankType.All - 2)).Select(x => (TankType)x));
+                tankTypes.AddRange(Enumerable.Range(1, (int) (TankType.All - 1)).Select(x => (TankType)x));
             }
             else
             {
+                tankTypes.RemoveAll(x => !CompatManager.IsActive(x));
+
                 foreach (var contents in tankTypes)
                 {
                     if (contents is <= TankType.Invalid or >= TankType.All)

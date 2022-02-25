@@ -24,13 +24,12 @@ namespace TankerFramework
 
         public override void ProcessInput(Event ev)
         {
-            if (!openOnLeftClick)
+            if (!openOnLeftClick || rightClickFloatMenuOptions.Count <= 1)
                 toggleAction();
             else
-            {
                 OpenMenu();
-                CurActivateSound?.PlayOneShotOnCamera();
-            }
+
+            CurActivateSound?.PlayOneShotOnCamera();
         }
 
         public override GizmoResult GizmoOnGUI(Vector2 loc, float maxWidth, GizmoRenderParms parms)

@@ -23,7 +23,7 @@ namespace TankerFramework
         public bool isFilling = false;
 
         public override float CapPercent => (float)(storedAmount / Props.storageCap);
-        public CompProperties_Tanker Props => (CompProperties_Tanker)props;
+        public new CompProperties_Tanker Props => (CompProperties_Tanker)props;
 
         #region Abstract implementation
         public override bool? IsDraining(TankType type) => isDraining;
@@ -162,9 +162,15 @@ namespace TankerFramework
                 TankType.Water => "TankerWaterStorage",
                 TankType.Helixien => "TankerHelixienStorage",
                 TankType.Invalid or TankType.All or _ => throw new ArgumentOutOfRangeException(nameof(Props.contents), Props.contents, "Invalid tanker contents"),
-            }).Translate(storedAmount.ToString("0.0"), Props.storageCap);
+            }).Translate();
 
-            stringBuilder.AppendLine(text);
+            stringBuilder.Append(text);
+            stringBuilder.Append(' ');
+            stringBuilder.Append(storedAmount.ToString("0.0"));
+            stringBuilder.Append('/');
+            stringBuilder.Append(Props.storageCap);
+            stringBuilder.AppendLine();
+
             if (isFilling)
                 stringBuilder.AppendLine("TankerFrameworkFillingInspect".Translate());
             else if (isDraining)

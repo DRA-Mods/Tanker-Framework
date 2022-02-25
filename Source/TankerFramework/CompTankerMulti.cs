@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Multiplayer.API;
 using TankerFramework.Compat;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace TankerFramework
         public Dictionary<TankType, bool> isFilling;
 
         public override float CapPercent => (float)(storedAmount.Sum(x => x.Value) / Props.storageCap);
-        public CompProperties_TankerMulti Props => (CompProperties_TankerMulti)props;
+        public new CompProperties_TankerMulti Props => (CompProperties_TankerMulti)props;
 
         #region Abstract implementation
         public override bool? IsDraining(TankType type)
@@ -141,6 +142,50 @@ namespace TankerFramework
                 isFilling = Props.tankTypes.ToDictionary(x => x, _ => false);
         }
 
+        public override string CompInspectStringExtra()
+        {
+            if (!parent.Spawned || Props.tankTypes.NullOrEmpty()) return string.Empty;
+
+            var stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine("TankerFrameworkTotalStorage".Translate(storedAmount.Values.Sum().ToString("0.0"), Props.storageCap));
+
+            foreach (var type in Props.tankTypes)
+            {
+                var text = (type switch
+                {
+                    TankType.Fuel => "TankerFrameworkFuelStorage",
+                    TankType.Oil => "TankerFrameworkOilStorage",
+                    TankType.Water => "TankerFrameworkWaterStorage",
+                    TankType.Helixien => "TankerFrameworkHelixienStorage",
+                    TankType.Invalid or TankType.All or _ => throw new ArgumentOutOfRangeException(nameof(Props.tankTypes), type, "Invalid tanker contents"),
+                }).Translate();
+
+                stringBuilder.Append(text);
+                stringBuilder.Append(' ');
+                stringBuilder.Append(storedAmount[type].ToString("0.0"));
+                stringBuilder.Append('/');
+                stringBuilder.Append(Props.storageCap);
+
+                if (isFilling[type])
+                {
+                    stringBuilder.Append(" (");
+                    stringBuilder.Append("TankerFrameworkFillingInspect".Translate());
+                    stringBuilder.Append(')');
+                }
+                else if (isDraining[type])
+                {
+                    stringBuilder.Append(" (");
+                    stringBuilder.Append("TankerFrameworkDrainingInspect".Translate());
+                    stringBuilder.Append(')');
+                }
+
+                stringBuilder.AppendLine();
+            }
+
+            return stringBuilder.ToString().TrimEndNewlines();
+        }
+
         #region Gizmos
         private Command_ActionRightClick gizmoDebugFill;
         private Command_ActionRightClick gizmoDebugEmpty;
@@ -163,8 +208,18 @@ namespace TankerFramework
         };
         private Command_ToggleRightClick GizmoToggleDrain => gizmoToggleDrain ??= new Command_ToggleRightClick
         {
-            isActive = index => index == -1 ? isDraining.Any() : isDraining[(TankType)index],
-            toggleAction = () =>  ToggleDrain(TankType.All),
+            isActive = index =>
+            {
+                if (index != -1) return isDraining[(TankType)index];
+
+                var draining = isDraining.Count(x => x.Value);
+                if (draining == 0)
+                    return false;
+                if (draining == isDraining.Count)
+                    return true;
+                return null;
+            },
+            toggleAction = () => ToggleDrain(TankType.All),
             rightClickFloatMenuOptions = Props.tankTypes.Select(x =>
                 new FloatMenuOption("TankerFrameworkToggleSpecificDrain".Translate($"TankerFramework{x}".Translate()), () => ToggleDrain(x))).ToList(),
             defaultLabel = "TankerFrameworkToggleDrain".Translate(),
@@ -173,7 +228,17 @@ namespace TankerFramework
         };
         private Command_ToggleRightClick GizmoToggleFill => gizmoToggleFill ??= new Command_ToggleRightClick
         {
-            isActive = index => index == -1 ? isFilling.Any() : isFilling[(TankType)index],
+            isActive = index =>
+            {
+                if (index != -1) return isFilling[(TankType)index];
+
+                var filling = isFilling.Count(x => x.Value);
+                if (filling == 0)
+                    return false;
+                if (filling == isFilling.Count)
+                    return true;
+                return null;
+            },
             toggleAction = () => ToggleFill(TankType.All),
             rightClickFloatMenuOptions = Props.tankTypes.Select(x =>
                 new FloatMenuOption("TankerFrameworkToggleSpecificFill".Translate($"TankerFramework{x}".Translate()), () => ToggleFill(x))).ToList(),
@@ -194,7 +259,7 @@ namespace TankerFramework
         {
             if (type == TankType.All)
             {
-                foreach (var tankerType in storedAmount.Keys)
+                foreach (var tankerType in Props.tankTypes)
                     storedAmount[tankerType] = 0;
             }
             else
@@ -205,28 +270,36 @@ namespace TankerFramework
         {
             if (type == TankType.All)
             {
-                bool? target = null;
-                foreach (var (key, value) in isDraining)
+                var target = !isDraining.Any(x => x.Value);
+                foreach (var tankType in Props.tankTypes)
                 {
-                    target ??= !value;
-                    isDraining[key] = target.Value;
+                    isDraining[tankType] = target;
+                    isFilling[tankType] = false;
                 }
             }
-            else isDraining[type] ^= true;
+            else
+            {
+                isDraining[type] ^= true;
+                isFilling[type] = false;
+            }
         }
 
         protected void ToggleFill(TankType type)
         {
             if (type == TankType.All)
             {
-                bool? target = null;
-                foreach (var (key, value) in isFilling)
+                var target = !isFilling.Any(x => x.Value);
+                foreach (var tankType in Props.tankTypes)
                 {
-                    target ??= !value;
-                    isFilling[key] = target.Value;
+                    isFilling[tankType] = target;
+                    isDraining[tankType] = false;
                 }
             }
-            else isFilling[type] ^= true;
+            else
+            {
+                isFilling[type] ^= true;
+                isDraining[type] = false;
+            }
         }
 
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
