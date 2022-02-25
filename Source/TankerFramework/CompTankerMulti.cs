@@ -9,6 +9,7 @@ using Verse;
 
 namespace TankerFramework
 {
+    [HotSwappable]
     public class CompTankerMulti : CompTankerBase
     {
         // Exposed fields
@@ -35,7 +36,7 @@ namespace TankerFramework
         public override void SetDraining(TankType type, bool value)
         {
             if (type != TankType.All) isDraining[type] = value;
-            foreach (var tankType in Props.tankTypes) isDraining[tankType] = value;
+            else foreach (var tankType in Props.tankTypes) isDraining[tankType] = value;
         }
 
         public override bool? IsFilling(TankType type)
@@ -53,7 +54,7 @@ namespace TankerFramework
         public override void SetFilling(TankType type, bool value)
         {
             if (type != TankType.All) isFilling[type] = value;
-            foreach (var tankType in Props.tankTypes) isFilling[tankType] = value;
+            else foreach (var tankType in Props.tankTypes) isFilling[tankType] = value;
         }
 
         public override double GetStoredAmount(TankType type)
@@ -266,6 +267,7 @@ namespace TankerFramework
                 storedAmount[type] = 0;
         }
 
+        [SyncMethod]
         protected void ToggleDrain(TankType type)
         {
             if (type == TankType.All)
@@ -284,6 +286,7 @@ namespace TankerFramework
             }
         }
 
+        [SyncMethod]
         protected void ToggleFill(TankType type)
         {
             if (type == TankType.All)
