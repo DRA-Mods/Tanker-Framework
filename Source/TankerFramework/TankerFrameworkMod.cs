@@ -8,9 +8,9 @@ using Verse;
 namespace TankerFramework
 {
     [UsedImplicitly]
-    public class CompTankerMod : Mod
+    public class TankerFrameworkMod : Mod
     {
-        public CompTankerMod(ModContentPack content) : base(content)
+        public TankerFrameworkMod(ModContentPack content) : base(content)
         {
             if (MP.enabled)
                 MP.RegisterAll();
@@ -22,7 +22,12 @@ namespace TankerFramework
             if (IsModLoaded("vanillaexpanded.vfepower"))
                 VanillaFurnitureExpandedPowerCompat.Init();
 
-            LongEventHandler.ExecuteWhenFinished(() => new Harmony("Dra.CompTankerMod").PatchAll());
+            LongEventHandler.ExecuteWhenFinished(() =>
+            {
+                var harmony = new Harmony("Dra.CompTankerMod");
+                if (!harmony.GetPatchedMethods().Any())
+                    harmony.PatchAll();
+            });
 
 #if DEBUG
             ReferenceBuilder.Restore(content);
