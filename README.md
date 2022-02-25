@@ -1,4 +1,4 @@
-# Comp Tanker
+# Tanker Framework
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E120FY7)
 
@@ -24,13 +24,32 @@ To use it, you must add the component to your thing:
 </li>
 ```
 
+Or alternatively, if you want to store multiple different things:
+
+```xml
+<li Class="CompTanker.CompProperties_Tanker">
+  <!-- Supports `Fuel`, `Oil`, `Water, and `Helixien` values-->
+  <!-- If there's only a single entry with a value of `All`, it'll automatically support all storage types -->
+  <!-- Might add more in the future -->
+  <contents>
+	<li>Fuel</li>
+	<li>Water</li>
+  </contents>
+  <!-- Default values -->
+  <storageCap>10000</storageCap>
+  <fillAmount>0.5</fillAmount>
+  <drainAmount>0.5</drainAmount>
+  <fillGizmoPath></fillGizmoPath>
+</li>
+```
+
 ## Fullness display
 
 If you want your thing to display a bar displaying current fill level when selected, you must set ThingDef's drawerType to MapMeshAndRealTime like so:
 ```xml
 <drawerType>MapMeshAndRealTime</drawerType>
 ```
-Please note, it only works with Rimefeller/Bad Hygiene.
+Please note, at the moment it only works with Rimefeller/Bad Hygiene.
 
 ## Mod specific components
 
