@@ -220,14 +220,14 @@ namespace TankerFramework
         private Command_ToggleRightClick gizmoToggleDrain;
         private Command_ToggleRightClick gizmoToggleFill;
 
-        private Command_Action GizmoDebugFill => gizmoDebugFill ??= new Command_ActionRightClick
+        private Command_ActionRightClick GizmoDebugFill => gizmoDebugFill ??= new Command_ActionRightClick
         {
             openOnLeftClick = true,
             rightClickFloatMenuOptions = storedAmount.Keys.Select(x =>
                 new FloatMenuOption($"Fill {x}", () => DebugFill(x))).ToList(),
             defaultLabel = "Dev: Fill",
         };
-        private Command_Action GizmoDebugEmpty => gizmoDebugEmpty ??= new Command_ActionRightClick
+        private Command_ActionRightClick GizmoDebugEmpty => gizmoDebugEmpty ??= new Command_ActionRightClick
         {
             action = () => DebugEmpty(TankType.All),
             rightClickFloatMenuOptions = storedAmount.Keys.Select(x =>
@@ -236,10 +236,8 @@ namespace TankerFramework
         };
         private Command_ToggleRightClick GizmoToggleDrain => gizmoToggleDrain ??= new Command_ToggleRightClick
         {
-            isActive = index =>
+            isActive = () =>
             {
-                if (index != -1) return isDraining[(TankType)index];
-
                 var draining = isDraining.Count(x => x.Value);
                 if (draining == 0)
                     return false;
@@ -256,10 +254,8 @@ namespace TankerFramework
         };
         private Command_ToggleRightClick GizmoToggleFill => gizmoToggleFill ??= new Command_ToggleRightClick
         {
-            isActive = index =>
+            isActive = () =>
             {
-                if (index != -1) return isFilling[(TankType)index];
-
                 var filling = isFilling.Count(x => x.Value);
                 if (filling == 0)
                     return false;

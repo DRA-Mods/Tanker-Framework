@@ -8,7 +8,7 @@ namespace TankerFramework
 {
     public class Command_ToggleRightClick : Command_ActionRightClick
     {
-        public Func<int, bool?> isActive;
+        public Func<bool?> isActive;
 
         public Action toggleAction;
 
@@ -16,7 +16,7 @@ namespace TankerFramework
         {
             get
             {
-                if (isActive(-1) == true)
+                if (isActive() == true)
                     return SoundDefOf.Checkbox_TurnedOff;
                 return SoundDefOf.Checkbox_TurnedOn;
             }
@@ -37,7 +37,7 @@ namespace TankerFramework
             var result = base.GizmoOnGUI(loc, maxWidth, parms);
             var rect = new Rect(loc.x, loc.y, this.GetWidth(maxWidth), 75f);
             var position = new Rect(rect.x + rect.width - 24f, rect.y, 24f, 24f);
-            var image = isActive(-1) switch
+            var image = isActive() switch
             {
                 true => Widgets.CheckboxOnTex,
                 false => Widgets.CheckboxOffTex,
