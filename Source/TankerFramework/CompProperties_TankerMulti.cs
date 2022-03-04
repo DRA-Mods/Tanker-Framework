@@ -23,18 +23,16 @@ namespace TankerFramework
                 tankTypes.Clear();
                 tankTypes.AddRange(Enumerable.Range(1, (int) (TankType.All - 1)).Select(x => (TankType)x));
             }
-            else
+
+            tankTypes.RemoveAll(x => !CompatManager.IsActive(x));
+
+            foreach (var contents in tankTypes)
             {
-                tankTypes.RemoveAll(x => !CompatManager.IsActive(x));
-
-                foreach (var contents in tankTypes)
-                {
-                    if (contents is <= TankType.Invalid or >= TankType.All)
-                        yield return $"{tankTypes} contains contents of illegal type: {contents}";
-                }
-
-                tankTypes.RemoveAll(contents => contents is <= TankType.Invalid or >= TankType.All);
+                if (contents is <= TankType.Invalid or >= TankType.All)
+                    yield return $"{tankTypes} contains contents of illegal type: {contents}";
             }
+
+            tankTypes.RemoveAll(contents => contents is <= TankType.Invalid or >= TankType.All);
         }
     }
 }
