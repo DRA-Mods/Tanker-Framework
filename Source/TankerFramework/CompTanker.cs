@@ -195,16 +195,7 @@ namespace TankerFramework
 
             var stringBuilder = new StringBuilder();
 
-            var text = (Props.contents switch
-            {
-                TankType.Fuel => "TankerFuelStorage",
-                TankType.Oil => "TankerOilStorage",
-                TankType.Water => "TankerWaterStorage",
-                TankType.Helixien => "TankerHelixienStorage",
-                TankType.Invalid or TankType.All or _ => throw new ArgumentOutOfRangeException(nameof(Props.contents), Props.contents, "Invalid tanker contents"),
-            }).Translate();
-
-            stringBuilder.Append(text);
+            stringBuilder.Append(CompatManager.GetTranslatedTankName(Props.contents));
             stringBuilder.Append(' ');
             stringBuilder.Append(storedAmount.ToString("0.0"));
             stringBuilder.Append('/');
