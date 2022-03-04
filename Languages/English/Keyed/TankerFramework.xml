@@ -13,7 +13,7 @@
   <TankerFrameworkFillingDetailedInspect>Currently filling {0}</TankerFrameworkFillingDetailedInspect>
   <TankerFrameworkDrainingDetailedInspect>Currently draining {0}</TankerFrameworkDrainingDetailedInspect>
 
-  <TankerFrameworkFuelStorage>Store chemfuel</TankerFrameworkFuelStorage>
+  <TankerFrameworkFuelStorage>Stored chemfuel:</TankerFrameworkFuelStorage>
   <TankerFrameworkOilStorage>Stored oil:</TankerFrameworkOilStorage>
   <TankerFrameworkWaterStorage>Stored water:</TankerFrameworkWaterStorage>
   <TankerFrameworkHelixienStorage>Stored Helixien gas:</TankerFrameworkHelixienStorage>
