@@ -42,18 +42,18 @@ namespace TankerFramework.HarmonyPatches
 
         private static void SetupThing(ThingComp parent, Thing thing)
         {
-            var comps = parent.parent.GetComps<CompTanker>()?.ToArray();
+            var comps = parent.parent.GetComps<CompTankerBase>()?.ToArray();
             if (comps == null || comps.Length == 0 || thing is not ThingWithComps thingWithComps) return;
 
-            var newComps = thingWithComps.GetComps<CompTanker>().ToArray();
+            var newComps = thingWithComps.GetComps<CompTankerBase>().ToArray();
 
             foreach (var comp in comps)
             {
-                var newComp = newComps.FirstOrDefault(x => x.Props.contents == comp.Props.contents);
-                if (newComp == null) continue;
-                newComp.storedAmount = comp.storedAmount;
-                newComp.isDraining = false;
-                newComp.isFilling = false;
+                foreach (var newComp in newComps)
+                {
+                    if (newComp.TransferFrom(comp))
+                        break;
+                }
             }
         }
     }

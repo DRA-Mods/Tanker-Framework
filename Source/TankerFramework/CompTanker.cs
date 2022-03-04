@@ -26,12 +26,52 @@ namespace TankerFramework
         public new CompProperties_Tanker Props => (CompProperties_Tanker)props;
 
         #region Abstract implementation
-        public override bool? IsDraining(TankType type) => isDraining;
-        public override void SetDraining(TankType type, bool value) => isDraining = value;
-        public override bool? IsFilling(TankType type) => isFilling;
-        public override void SetFilling(TankType type, bool value) => isFilling = value;
-        public override double GetStoredAmount(TankType type) => storedAmount;
-        public override double SetStoredAmount(TankType type, double count) => storedAmount = count;
+        public override bool? IsDraining(TankType type)
+        {
+            if (!parent.Spawned) return null;
+            return isDraining;
+        }
+
+        public override void SetDraining(TankType type, bool value)
+        {
+            if (!parent.Spawned) return;
+            isDraining = value;
+        }
+
+        public override bool? IsFilling(TankType type)
+        {
+            if (!parent.Spawned) return null;
+            return isFilling;
+        }
+
+        public override void SetFilling(TankType type, bool value)
+        {
+            if (!parent.Spawned) return;
+            isFilling = value;
+        }
+
+        public override double GetStoredAmount(TankType type)
+        {
+            if (!parent.Spawned) return 0;
+            return storedAmount;
+        }
+
+        public override void SetStoredAmount(TankType type, double count)
+        {
+            if (!parent.Spawned) return;
+            storedAmount = count;
+        }
+
+        public override bool TransferFrom(CompTankerBase other)
+        {
+            if (other is not CompTanker tanker)
+                return false;
+            if (Props.contents != tanker.Props.contents)
+                return false;
+
+            storedAmount = tanker.storedAmount;
+            return true;
+        }
         #endregion
 
         private Command_Action GizmoDebugFill => gizmoDebugFill ??= new Command_Action

@@ -16,7 +16,8 @@ namespace TankerFramework
         public abstract bool? IsFilling(TankType type);
         public abstract void SetFilling(TankType type, bool value);
         public abstract double GetStoredAmount(TankType type);
-        public abstract double SetStoredAmount(TankType type, double count);
+        public abstract void SetStoredAmount(TankType type, double count);
+        public abstract bool TransferFrom(CompTankerBase other);
 
         public override void PostDraw()
         {

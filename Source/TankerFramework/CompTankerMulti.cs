@@ -23,6 +23,7 @@ namespace TankerFramework
         #region Abstract implementation
         public override bool? IsDraining(TankType type)
         {
+            if (!parent.Spawned) return null;
             if (type != TankType.All) return isDraining[type];
 
             var count = isDraining.Values.Count(x => x);
@@ -35,12 +36,14 @@ namespace TankerFramework
 
         public override void SetDraining(TankType type, bool value)
         {
+            if (!parent.Spawned) return;
             if (type != TankType.All) isDraining[type] = value;
             else foreach (var tankType in Props.tankTypes) isDraining[tankType] = value;
         }
 
         public override bool? IsFilling(TankType type)
         {
+            if (!parent.Spawned) return null;
             if (type != TankType.All) return isFilling[type];
 
             var count = isFilling.Values.Count(x => x);
@@ -53,17 +56,40 @@ namespace TankerFramework
 
         public override void SetFilling(TankType type, bool value)
         {
+            if (!parent.Spawned) return;
             if (type != TankType.All) isFilling[type] = value;
             else foreach (var tankType in Props.tankTypes) isFilling[tankType] = value;
         }
 
         public override double GetStoredAmount(TankType type)
         {
+            if (!parent.Spawned) return 0;
             if (type != TankType.All) return storedAmount[type];
             return storedAmount.Values.Sum();
         }
 
-        public override double SetStoredAmount(TankType type, double count) => storedAmount[type] = count;
+        public override void SetStoredAmount(TankType type, double count)
+        {
+            if (!parent.Spawned) return;
+            storedAmount[type] = count;
+        }
+
+        public override bool TransferFrom(CompTankerBase other)
+        {
+            if (other is not CompTankerMulti tanker)
+                return false;
+            if (Props.tankTypes.Count != tanker.Props.tankTypes.Count)
+                return false;
+
+            for (var i = 0; i < Props.tankTypes.Count; i++)
+            {
+                if (Props.tankTypes[i] != tanker.Props.tankTypes[i])
+                    return false;
+            }
+
+            storedAmount = tanker.storedAmount;
+            return true;
+        }
         #endregion
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
@@ -74,9 +100,12 @@ namespace TankerFramework
                 return;
             }
 
-            storedAmount = Props.tankTypes.ToDictionary(x => x, _ => 0d);
-            isDraining = Props.tankTypes.ToDictionary(x => x, _ => false);
-            isFilling = Props.tankTypes.ToDictionary(x => x, _ => false);
+            if (storedAmount.NullOrEmpty())
+                storedAmount = Props.tankTypes.ToDictionary(x => x, _ => 0d);
+            if (isDraining.NullOrEmpty())
+                isDraining = Props.tankTypes.ToDictionary(x => x, _ => false);
+            if (isFilling.NullOrEmpty())
+                isFilling = Props.tankTypes.ToDictionary(x => x, _ => false);
         }
 
         public override void PostDrawExtraSelectionOverlays()
@@ -165,8 +194,6 @@ namespace TankerFramework
                 stringBuilder.Append(text);
                 stringBuilder.Append(' ');
                 stringBuilder.Append(storedAmount[type].ToString("0.0"));
-                stringBuilder.Append('/');
-                stringBuilder.Append(Props.storageCap);
 
                 if (isFilling[type])
                 {
