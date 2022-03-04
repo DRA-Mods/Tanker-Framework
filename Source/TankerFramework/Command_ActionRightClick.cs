@@ -20,8 +20,13 @@ namespace TankerFramework
 
         public override void ProcessInput(Event ev)
         {
-            if (!openOnLeftClick || rightClickFloatMenuOptions.Count <= 1)
+            if (!openOnLeftClick)
                 base.ProcessInput(ev);
+            else if (rightClickFloatMenuOptions.Count == 1)
+            {
+                rightClickFloatMenuOptions[0].action();
+                CurActivateSound?.PlayOneShotOnCamera();
+            }
             else
             {
                 OpenMenu();
