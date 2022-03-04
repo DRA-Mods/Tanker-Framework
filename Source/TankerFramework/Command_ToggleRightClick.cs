@@ -6,7 +6,7 @@ using Verse.Sound;
 
 namespace TankerFramework
 {
-    internal class Command_ToggleRightClick : Command_ActionRightClick
+    public class Command_ToggleRightClick : Command_ActionRightClick
     {
         public Func<int, bool?> isActive;
 
