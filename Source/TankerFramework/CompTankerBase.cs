@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 
 namespace TankerFramework
@@ -17,6 +18,8 @@ namespace TankerFramework
         public abstract void SetFilling(TankType type, bool value);
         public abstract double GetStoredAmount(TankType type);
         public abstract void SetStoredAmount(TankType type, double count);
+        public abstract bool CanStoreType(TankType type);
+        public abstract IEnumerable<TankType> GetAllStoreableTypes();
         public abstract bool TransferFrom(CompTankerBase other);
 
         public override void PostDraw()

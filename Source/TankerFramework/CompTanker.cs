@@ -62,6 +62,13 @@ namespace TankerFramework
             storedAmount = count;
         }
 
+        public override bool CanStoreType(TankType type) => Props.contents == type;
+
+        public override IEnumerable<TankType> GetAllStoreableTypes()
+        {
+            yield return Props.contents;
+        }
+
         public override bool TransferFrom(CompTankerBase other)
         {
             if (other is not CompTanker tanker)
