@@ -202,6 +202,8 @@ namespace TankerFramework
 
             var stringBuilder = new StringBuilder();
 
+            stringBuilder.Append("TankerFrameworkStored".Translate());
+            stringBuilder.Append(' ');
             stringBuilder.Append(CompatManager.GetTranslatedTankName(Props.contents));
             stringBuilder.Append(": ");
             stringBuilder.Append(storedAmount.ToString("0.0"));
