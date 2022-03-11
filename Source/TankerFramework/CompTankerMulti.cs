@@ -187,7 +187,7 @@ namespace TankerFramework
             foreach (var type in Props.tankTypes)
             {
                 stringBuilder.Append(CompatManager.GetTranslatedTankName(type));
-                stringBuilder.Append(' ');
+                stringBuilder.Append(": ");
                 stringBuilder.Append(storedAmount[type].ToString("0.0"));
 
                 if (isFilling[type])

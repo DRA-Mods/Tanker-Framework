@@ -203,7 +203,7 @@ namespace TankerFramework
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append(CompatManager.GetTranslatedTankName(Props.contents));
-            stringBuilder.Append(' ');
+            stringBuilder.Append(": ");
             stringBuilder.Append(storedAmount.ToString("0.0"));
             stringBuilder.Append('/');
             stringBuilder.Append(Props.storageCap);
