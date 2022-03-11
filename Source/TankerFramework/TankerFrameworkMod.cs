@@ -28,10 +28,6 @@ namespace TankerFramework
                 if (!harmony.GetPatchedMethods().Any())
                     harmony.PatchAll();
             });
-
-#if DEBUG
-            ReferenceBuilder.Restore(content);
-#endif
         }
 
         private static bool IsModLoaded(string s)
